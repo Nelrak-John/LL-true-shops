@@ -135,16 +135,19 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 340px;
             height: 100%;
-            background: rgba(245, 240, 232, 0.98);
+            background: rgba(242, 239, 233, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 2000;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            padding: 0 50px;
             transform: translateX(-100%);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .menu-overlay.active {
@@ -170,20 +173,57 @@
             display: flex;
             flex-direction: column;
             gap: 40px;
-            text-align: center;
+            text-align: left;
         }
 
         .menu-item {
-            font-size: 24px;
-            letter-spacing: 4px;
+            font-size: 20px;
+            letter-spacing: 3px;
             text-decoration: none;
             color: #1a1a1a;
             text-transform: uppercase;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .menu-item:hover {
             opacity: 0.6;
+            transform: translateX(10px);
+        }
+
+        /* ==================== DIMMED LAYER ==================== */
+        .dimmed-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            pointer-events: none;
+        }
+
+        .dimmed-layer.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* ==================== MAIN CONTENT SHIFT ==================== */
+        body.menu-open .scroll-container,
+        body.menu-open header,
+        body.menu-open footer {
+            transform: translateX(340px);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body:not(.menu-open) .scroll-container,
+        body:not(.menu-open) header,
+        body:not(.menu-open) footer {
+            transform: translateX(0);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* ==================== SCROLL SNAP CONTAINER ==================== */
@@ -394,9 +434,12 @@
         </div>
     </header>
 
+    <!-- Dimmed Layer -->
+    <div class="dimmed-layer" id="dimmedLayer"></div>
+
     <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay">
-        <div class="menu-close" id="menuClose">CLOSE</div>
+        <div class="menu-close" id="menuClose">CLOSE -</div>
         <div class="menu-items">
             <a href="#" class="menu-item">ARCHIVE</a>
             <a href="#" class="menu-item">EDITORIAL</a>
@@ -461,20 +504,41 @@
         const menuBtn = document.getElementById('menuBtn');
         const menuOverlay = document.getElementById('menuOverlay');
         const menuClose = document.getElementById('menuClose');
+        const dimmedLayer = document.getElementById('dimmedLayer');
+        const body = document.body;
+
+        const originalMenuText = menuBtn.textContent;
+
+        function openMenu() {
+            menuOverlay.classList.add('active');
+            dimmedLayer.classList.add('active');
+            body.classList.add('menu-open');
+            menuBtn.textContent = 'CLOSE -';
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.remove('active');
+            dimmedLayer.classList.remove('active');
+            body.classList.remove('menu-open');
+            menuBtn.textContent = originalMenuText;
+        }
 
         menuBtn.addEventListener('click', () => {
-            menuOverlay.classList.add('active');
+            if (menuOverlay.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
         });
 
-        menuClose.addEventListener('click', () => {
-            menuOverlay.classList.remove('active');
-        });
+        menuClose.addEventListener('click', closeMenu);
+
+        // Close menu when clicking on dimmed layer
+        dimmedLayer.addEventListener('click', closeMenu);
 
         // Close menu when clicking on menu items
         document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', () => {
-                menuOverlay.classList.remove('active');
-            });
+            item.addEventListener('click', closeMenu);
         });
 
         // ==================== LOGO DRAG AND DROP FUNCTIONALITY ====================
