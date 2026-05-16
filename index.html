@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LL - Lonely Legacy</title>
+    <style>
+        /* ==================== RESET & BASE STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Times New Roman', Georgia, serif;
+            background-color: #F5F0E8;
+            color: #1a1a1a;
+        }
+
+        /* ==================== BACKGROUND IMAGE ==================== */
+        /* 
+            [이미지 주석] 백그라운드 이미지 URL
+            여기에 Unsplash에서 선택한 베이지/화이트 톤의 추상적인 질감 이미지 URL을 넣어주세요.
+            현재는 플레이스홀더 이미지를 사용합니다.
+        */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==================== HEADER ==================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(245, 240, 232, 0.9) 0%, transparent 100%);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-btn {
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .menu-btn:hover {
+            opacity: 0.6;
+        }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 
+            [이미지 주석] LL 로고 이미지 URL
+            여기에 LL 로고 PNG 이미지 URL을 넣어주세요.
+            현재는 텍스트 플레이스홀더를 사용합니다.
+        */
+        .logo-container {
+            cursor: grab;
+            user-select: none;
+        }
+
+        .logo-container:active {
+            cursor: grabbing;
+        }
+
+        .logo-placeholder {
+            font-size: 18px;
+            letter-spacing: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        .logo-placeholder img {
+            max-height: 40px;
+            display: block;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .header-link {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: #1a1a1a;
+            transition: opacity 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .header-link:hover {
+            opacity: 0.6;
+        }
+
+        /* ==================== MENU OVERLAY ==================== */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(245, 240, 232, 0.98);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(-100%);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-overlay.active {
+            transform: translateX(0);
+        }
+
+        .menu-close {
+            position: absolute;
+            top: 30px;
+            left: 50px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-close:hover {
+            opacity: 0.6;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            text-align: center;
+        }
+
+        .menu-item {
+            font-size: 24px;
+            letter-spacing: 4px;
+            text-decoration: none;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-item:hover {
+            opacity: 0.6;
+        }
+
+        /* ==================== SCROLL SNAP CONTAINER ==================== */
+        .scroll-container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .section {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* ==================== SECTION 1: THE CORE OBJECT ==================== */
+        .section-1 {
+            background: transparent;
+        }
+
+        .section-title {
+            font-size: 14px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+            opacity: 0.7;
+        }
+
+        .object-container {
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 
+            [이미지 주석] 실버 메탈 오브젝트 시퀀스 이미지 URL들
+            여기에 Unsplash에서 선택한 실버/메탈 오브젝트 이미지 URL들을 넣어주세요.
+            스크롤 시 순차적으로 변경됩니다.
+            현재는 플레이스홀더 이미지를 사용합니다.
+        */
+        .silver-object {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .silver-object:hover {
+            transform: scale(1.05);
+        }
+
+        /* ==================== SECTION 2: SOUND & VISUAL ARCHIVE ==================== */
+        .section-2 {
+            background: rgba(245, 240, 232, 0.3);
+        }
+
+        .archive-content {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .archive-title {
+            font-size: 32px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .archive-description {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.7;
+        }
+
+        /* ==================== SECTION 3: PRODUCT LAB ==================== */
+        .section-3 {
+            background: rgba(245, 240, 232, 0.5);
+        }
+
+        .lab-content {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .lab-title {
+            font-size: 32px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .lab-description {
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.7;
+        }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .instagram-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .instagram-link:hover {
+            opacity: 0.6;
+        }
+
+        .instagram-link svg {
+            width: 100%;
+            height: 100%;
+            fill: #1a1a1a;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo-placeholder {
+                font-size: 14px;
+                letter-spacing: 4px;
+            }
+
+            .header-right {
+                gap: 20px;
+            }
+
+            .header-link {
+                font-size: 10px;
+            }
+
+            .object-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .section-title {
+                font-size: 12px;
+                letter-spacing: 4px;
+            }
+
+            .archive-title,
+            .lab-title {
+                font-size: 24px;
+                letter-spacing: 3px;
+            }
+
+            .archive-description,
+            .lab-description {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Image -->
+    <div class="background-image"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <div class="menu-btn" id="menuBtn">MENU +</div>
+        </div>
+        <div class="header-center">
+            <div class="logo-container" id="logoContainer" draggable="true">
+                <!-- 
+                    [이미지 주석] LL 로고 이미지
+                    아래 img 태그의 src에 로고 이미지 URL을 넣어주세요.
+                    현재는 텍스트 플레이스홀더를 사용합니다.
+                -->
+                <a href="#" class="logo-placeholder">
+                    <!-- <img src="LOGO_IMAGE_URL_HERE" alt="LL Logo"> -->
+                    L O N E L Y &nbsp;&nbsp; L E G A C Y
+                </a>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="#" class="header-link">LOGIN</a>
+            <a href="#" class="header-link">BAG (0)</a>
+        </div>
+    </header>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="menu-close" id="menuClose">CLOSE</div>
+        <div class="menu-items">
+            <a href="#" class="menu-item">ARCHIVE</a>
+            <a href="#" class="menu-item">EDITORIAL</a>
+            <a href="#" class="menu-item">SHOP</a>
+        </div>
+    </div>
+
+    <!-- Scroll Container -->
+    <div class="scroll-container" id="scrollContainer">
+        <!-- Section 1: THE CORE OBJECT -->
+        <section class="section section-1">
+            <div class="section-title">01. THE CORE OBJECT</div>
+            <div class="object-container">
+                <!-- 
+                    [이미지 주석] 실버 메탈 오브젝트 이미지
+                    아래 img 태그의 src에 실버/메탈 오브젝트 이미지 URL을 넣어주세요.
+                    현재는 플레이스홀더 이미지를 사용합니다.
+                -->
+                <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80" 
+                     alt="Silver Object" 
+                     class="silver-object" 
+                     id="silverObject">
+            </div>
+        </section>
+
+        <!-- Section 2: SOUND & VISUAL ARCHIVE -->
+        <section class="section section-2">
+            <div class="section-title">02. SOUND & VISUAL ARCHIVE</div>
+            <div class="archive-content">
+                <h2 class="archive-title">Archive</h2>
+                <p class="archive-description">
+                    Curated collection of soundscapes and visual narratives from artists worldwide.
+                    Explore the intersection of music, fashion, and artistic expression.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 3: PRODUCT LAB -->
+        <section class="section section-3">
+            <div class="section-title">03. PRODUCT LAB</div>
+            <div class="lab-content">
+                <h2 class="lab-title">Product Lab</h2>
+                <p class="lab-description">
+                    Experimental fashion pieces and collaborative projects.
+                    Where craftsmanship meets contemporary art.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <a href="https://www.instagram.com/lonelylegacyxx/" target="_blank" class="instagram-link">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+        </a>
+    </footer>
+
+    <script>
+        // ==================== MENU OVERLAY FUNCTIONALITY ====================
+        const menuBtn = document.getElementById('menuBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuClose = document.getElementById('menuClose');
+
+        menuBtn.addEventListener('click', () => {
+            menuOverlay.classList.add('active');
+        });
+
+        menuClose.addEventListener('click', () => {
+            menuOverlay.classList.remove('active');
+        });
+
+        // Close menu when clicking on menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                menuOverlay.classList.remove('active');
+            });
+        });
+
+        // ==================== LOGO DRAG AND DROP FUNCTIONALITY ====================
+        const logoContainer = document.getElementById('logoContainer');
+
+        logoContainer.addEventListener('dragstart', (e) => {
+            // Set the drag data to the current URL
+            e.dataTransfer.setData('text/uri-list', window.location.href);
+            e.dataTransfer.setData('text/plain', window.location.href);
+            e.dataTransfer.effectAllowed = 'copy';
+        });
+
+        // ==================== SILVER OBJECT SEQUENCE EFFECT ====================
+        const scrollContainer = document.getElementById('scrollContainer');
+        const silverObject = document.getElementById('silverObject');
+
+        // 
+        // [이미지 주석] 실버 메탈 오브젝트 시퀀스 이미지 URL 배열
+        // 여기에 Unsplash에서 선택한 실버/메탈 오브젝트 이미지 URL들을 배열로 넣어주세요.
+        // 스크롤 위치에 따라 순차적으로 변경됩니다.
+        // 현재는 플레이스홀더 이미지들을 사용합니다.
+        //
+        const objectImages = [
+            'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
+            'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&q=80',
+            'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80',
+            'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800&q=80',
+            'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&q=80'
+        ];
+
+        let currentImageIndex = 0;
+
+        scrollContainer.addEventListener('scroll', () => {
+            const scrollTop = scrollContainer.scrollTop;
+            const sectionHeight = window.innerHeight;
+            const sectionIndex = Math.floor(scrollTop / sectionHeight);
+
+            // Only change images when in section 1
+            if (sectionIndex === 0) {
+                const scrollProgress = scrollTop / sectionHeight;
+                const imageIndex = Math.floor(scrollProgress * objectImages.length);
+                
+                if (imageIndex !== currentImageIndex && imageIndex < objectImages.length) {
+                    currentImageIndex = imageIndex;
+                    silverObject.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        silverObject.src = objectImages[currentImageIndex];
+                        silverObject.style.opacity = '1';
+                    }, 150);
+                }
+            }
+        });
+
+        // ==================== HOVER EFFECT FOR SILVER OBJECT ====================
+        silverObject.addEventListener('mouseenter', () => {
+            silverObject.style.transform = 'scale(1.05)';
+        });
+
+        silverObject.addEventListener('mouseleave', () => {
+            silverObject.style.transform = 'scale(1)';
+        });
+
+        // ==================== PRELOAD IMAGES ====================
+        objectImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    </script>
+</body>
+</html>
