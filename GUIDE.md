@@ -290,7 +290,24 @@ npx http-server -p 8000
 - 모바일/태블릿/데스크톱 대응
 - 화면 크기에 따라 자동 조절
 
+## 드래그앤드롭 방지 기능
+**위치**: CSS 이미지 관련 클래스 (전체)
+```css
+.menu-btn img,
+.logo-placeholder img,
+.product-image img,
+.archive-card img,
+.editorial-image-frame img,
+.instagram-link img {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+```
+- **적용 대상**: 모든 이미지 영역 (메뉴 엠블럼, 제품 이미지, 아카이브 카드, 에디토리얼 이미지, 로고, 인스타그램 아이콘)
+- **기능**: 사용자가 이미지를 드래그하여 다른 곳에 놓거나 저장하는 것을 방지
+- **브라우저 호환성**: 크롬/사파리 (`-webkit-user-drag`), 기타 브라우저 (`user-select`)
+
 ## 주의사항
 - 이미지 URL은 반드시 유효한 외부 링크여야 합니다.
-- 로컬 이미지를 사용하려면 상대 경로를 사용하세요 (예: `./images/logo.png`)
+- 로컬 이미지를 사용하려면 상대 경로를 사용하세요 (예: `./images/logo.png`).
 - JavaScript 수정 시 주석을 참고하여 기능이 깨지지 않도록 주의하세요.
