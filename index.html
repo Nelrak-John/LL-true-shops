@@ -284,6 +284,7 @@
             min-height: 100vh;
             padding: 150px 50px 50px;
             display: none;
+            text-align: center;
         }
 
         .sub-page.active {
@@ -302,9 +303,95 @@
 
         .sub-page-content {
             max-width: 800px;
+            margin: 0 auto;
             line-height: 2;
             color: #1a1a1a;
             opacity: 0.8;
+        }
+
+        /* ==================== EDITORIAL LOOKBOOK WALL ==================== */
+        .editorial-lookbook {
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        .editorial-image-frame {
+            width: 100%;
+            height: 80vh;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editorial-image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .editorial-caption {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            opacity: 0.8;
+        }
+
+        /* ==================== ARCHIVE HORIZONTAL SCROLL ==================== */
+        .archive-timeline {
+            width: 100%;
+            margin-top: 50px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 30px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .archive-timeline::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .archive-timeline::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .archive-timeline::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .archive-card {
+            display: inline-block;
+            width: 300px;
+            height: 500px;
+            margin-right: 40px;
+            position: relative;
+            vertical-align: top;
+        }
+
+        .archive-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .archive-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            opacity: 0.8;
+            white-space: normal;
         }
 
         .sub-page-content p {
@@ -315,15 +402,18 @@
         /* ==================== SHOP PRODUCT GRID ==================== */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 50px;
+            grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+            gap: 52px;
+            margin: 50px auto 0;
+            max-width: 1400px;
+            justify-content: center;
         }
 
         .product-card {
-            background: rgba(245, 240, 232, 0.3);
-            padding: 20px;
+            background: transparent;
+            padding: 0;
             transition: opacity 0.3s ease;
+            text-align: center;
         }
 
         .product-card:hover {
@@ -332,8 +422,7 @@
 
         .product-image {
             width: 100%;
-            height: 400px;
-            background: rgba(0, 0, 0, 0.05);
+            aspect-ratio: 1 / 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -342,8 +431,8 @@
         }
 
         .product-image img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
@@ -362,29 +451,6 @@
             letter-spacing: 1px;
             color: #1a1a1a;
             opacity: 0.7;
-        }
-
-        .upload-section {
-            margin-top: 80px;
-            padding: 40px;
-            background: rgba(245, 240, 232, 0.5);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .upload-title {
-            font-family: 'Times New Roman', Georgia, serif;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            color: #1a1a1a;
-        }
-
-        .upload-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
         }
 
         .form-group {
@@ -445,10 +511,10 @@
             bottom: 30px;
             left: 0;
             width: 100%;
-            display: flex;
+            display: flex !important;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .instagram-link {
@@ -581,6 +647,69 @@
                 <p>Explore the intersection of music, fashion, and artistic expression.</p>
                 <p>Our archive represents a journey through time, capturing moments of creative brilliance and cultural significance.</p>
             </div>
+
+            <!-- Archive Horizontal Timeline -->
+            <div class="archive-timeline">
+                <!-- 
+                    [아카이브 카드 1]
+                    이미지 주소: Unsplash 플레이스홀더
+                    서브 텍스트: 2026.05 - SHOW BEHIND
+                -->
+                <div class="archive-card">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Show Behind"> -->
+                    <div class="archive-caption">2026.05 - SHOW BEHIND</div>
+                </div>
+
+                <!-- 
+                    [아카이브 카드 2]
+                    이미지 주소: Unsplash 플레이스홀더
+                    서브 텍스트: STUDIO RECORDING
+                -->
+                <div class="archive-card">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Studio Recording"> -->
+                    <div class="archive-caption">STUDIO RECORDING</div>
+                </div>
+
+                <!-- 
+                    [아카이브 카드 3]
+                    이미지 주소: Unsplash 플레이스홀더
+                    서브 텍스트: 2026.04 - BACKSTAGE
+                -->
+                <div class="archive-card">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Backstage"> -->
+                    <div class="archive-caption">2026.04 - BACKSTAGE</div>
+                </div>
+
+                <!-- 
+                    [아카이브 카드 4]
+                    이미지 주소: Unsplash 플레이스홀더
+                    서브 텍스트: LIVE PERFORMANCE
+                -->
+                <div class="archive-card">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Live Performance"> -->
+                    <div class="archive-caption">LIVE PERFORMANCE</div>
+                </div>
+
+                <!-- 
+                    [아카이브 카드 5]
+                    이미지 주소: Unsplash 플레이스홀더
+                    서브 텍스트: 2026.03 - COLLECTION
+                -->
+                <div class="archive-card">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Collection"> -->
+                    <div class="archive-caption">2026.03 - COLLECTION</div>
+                </div>
+
+                <!-- 
+                    [아카이브 카드 6]
+                    이미지 주소: Unsplash 플레이스홀더
+                    서브 텍스트: BEHIND THE SCENES
+                -->
+                <div class="archive-card">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Behind The Scenes"> -->
+                    <div class="archive-caption">BEHIND THE SCENES</div>
+                </div>
+            </div>
         </div>
 
         <!-- Editorial Page -->
@@ -591,81 +720,115 @@
                 <p>Each editorial piece is a carefully crafted narrative that transcends traditional boundaries.</p>
                 <p>We collaborate with visionary photographers and stylists to create timeless visual experiences.</p>
             </div>
+
+            <!-- Editorial Lookbook Wall -->
+            <div class="editorial-lookbook">
+                <!-- 
+                    [에디토리얼 이미지 1]
+                    이미지 주소: Unsplash 플레이스홀더
+                    화보 제목: SPRING COLLECTION 2026
+                -->
+                <div class="editorial-image-frame">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Spring Collection 2026"> -->
+                    <div class="editorial-caption">SPRING COLLECTION 2026</div>
+                </div>
+
+                <!-- 
+                    [에디토리얼 이미지 2]
+                    이미지 주소: Unsplash 플레이스홀더
+                    화보 제목: SUMMER VIBES
+                -->
+                <div class="editorial-image-frame">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Summer Vibes"> -->
+                    <div class="editorial-caption">SUMMER VIBES</div>
+                </div>
+
+                <!-- 
+                    [에디토리얼 이미지 3]
+                    이미지 주소: Unsplash 플레이스홀더
+                    화보 제목: AUTUMN ESSENCE
+                -->
+                <div class="editorial-image-frame">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Autumn Essence"> -->
+                    <div class="editorial-caption">AUTUMN ESSENCE</div>
+                </div>
+
+                <!-- 
+                    [에디토리얼 이미지 4]
+                    이미지 주소: Unsplash 플레이스홀더
+                    화보 제목: WINTER DREAMS
+                -->
+                <div class="editorial-image-frame">
+                    <!-- <img src="https://images.unsplash.com/photo-..." alt="Winter Dreams"> -->
+                    <div class="editorial-caption">WINTER DREAMS</div>
+                </div>
+            </div>
         </div>
 
         <!-- Shop Page -->
         <div class="sub-page" id="shopPage">
             <h1 class="sub-page-title">SHOP</h1>
             <div class="sub-page-content">
-                <p>Exclusive collections and limited edition pieces.</p>
-                <p>Each item is crafted with meticulous attention to detail and quality.</p>
-                <p>Discover our latest arrivals and timeless classics that define the LL aesthetic.</p>
+                <p>Sound & Fashion, 일상 속의 마스터피스.</p>
+                
             </div>
 
             <!-- Product Grid -->
             <div class="product-grid">
+                <!-- 
+                    [제품 카드 1]
+                    이미지 경로: assets/product1.png (정사각형 PNG 파일)
+                    제품명: SILVER CHAIN NECKLACE
+                    가격: ₩ 1,348,000
+                    이미지를 교체하려면 src 속성의 경로를 변경하세요.
+                -->
                 <div class="product-card">
                     <div class="product-image">
-                        <!-- 
-                            [이미지 주석] 제품 이미지
-                            여기에 제품 이미지 URL을 넣어주세요.
-                            현재는 플레이스홀더입니다.
-                        -->
-                        <span style="color: rgba(0,0,0,0.3); font-size: 14px; letter-spacing: 2px;">PRODUCT IMAGE</span>
+                        <img src="assets/products/01.png" alt="SILVER CHAIN NECKLACE">
                     </div>
                     <div class="product-name">SILVER CHAIN NECKLACE</div>
                     <div class="product-price">₩ 1,348,000</div>
                 </div>
 
+                <!-- 
+                    [제품 카드 2]
+                    이미지 경로: assets/product2.png (정사각형 PNG 파일)
+                    제품명: LL Short Sleeve
+                    가격: ₩ 88,000
+                    이미지를 교체하려면 src 속성의 경로를 변경하세요.
+                -->
                 <div class="product-card">
                     <div class="product-image">
-                        <span style="color: rgba(0,0,0,0.3); font-size: 14px; letter-spacing: 2px;">PRODUCT IMAGE</span>
+                        <img src="assets/products/02.png" alt="LL Short Sleeve">
                     </div>
                     <div class="product-name">LL Short Sleeve</div>
                     <div class="product-price">₩ 88,000</div>
                 </div>
 
+                <!-- 
+                    [제품 카드 3]
+                    이미지 경로: assets/product3.png (정사각형 PNG 파일)
+                    제품명: "L0V3 L0V3" RING
+                    가격: ₩ 348,000
+                    이미지를 교체하려면 src 속성의 경로를 변경하세요.
+                -->
                 <div class="product-card">
                     <div class="product-image">
-                        <span style="color: rgba(0,0,0,0.3); font-size: 14px; letter-spacing: 2px;">PRODUCT IMAGE</span>
+                        <img src="assets/products/03.png" alt="L0V3 L0V3 RING">
                     </div>
                     <div class="product-name">"L0V3 L0V3" RING</div>
                     <div class="product-price">₩ 348,000</div>
                 </div>
             </div>
 
-            <!-- Upload Section -->
-            <div class="upload-section">
-                <h2 class="upload-title">UPLOAD PRODUCT</h2>
-                <form class="upload-form">
-                    <div class="form-group">
-                        <label class="form-label">PRODUCT NAME</label>
-                        <input type="text" class="form-input" placeholder="Enter product name">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">PRICE</label>
-                        <input type="text" class="form-input" placeholder="Enter price (e.g., $450.00)">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">DESCRIPTION</label>
-                        <textarea class="form-input form-textarea" placeholder="Enter product description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">IMAGE URL</label>
-                        <input type="text" class="form-input" placeholder="Enter image URL">
-                    </div>
-                    <button type="submit" class="upload-button">UPLOAD</button>
-                </form>
-            </div>
-        </div>
-    </div>
+         
 
     <!-- Footer -->
     <footer>
         <!-- 
             [이미지 주석] 인스타그램 아이콘 이미지
             src에 인스타그램 아이콘 PNG 이미지 경로를 지정하세요.
-            현재는 assets/insta_icon.png 경로로 설정되어 있습니다.
+            현재는 assets/insta_icon.png 경로로 설정되어 있음.
         -->
         <a href="https://www.instagram.com/lonelylegacyxx/" target="_blank" class="instagram-link">
             <img src="assets/insta_icon.png" alt="Instagram">
@@ -686,6 +849,7 @@
         const scrollContainer = document.getElementById('scrollContainer');
         const subPageContainer = document.getElementById('subPageContainer');
         const menuTextItems = document.querySelectorAll('.menu-text-item');
+        const footer = document.querySelector('footer');
 
         let isMenuOpen = false;
 
@@ -701,35 +865,46 @@
         function switchToPage(pageName) {
             // 메인 컨테이너 숨기기
             scrollContainer.classList.add('hidden');
-            
+
             // 모든 서브 페이지 숨기기
             document.querySelectorAll('.sub-page').forEach(page => {
                 page.classList.remove('active');
             });
-            
+
             // 선택한 서브 페이지 표시
             const targetPage = document.getElementById(pageName + 'Page');
             if (targetPage) {
                 targetPage.classList.add('active');
                 subPageContainer.classList.add('active');
             }
-            
+
+            // footer 숨기기
+            footer.style.display = 'none';
+
             // 메뉴 닫기
             isMenuOpen = false;
             menuTextContainer.classList.remove('active');
         }
 
+        // 페이지 로드 시 footer 보이기
+        window.addEventListener('load', () => {
+            footer.style.display = 'flex';
+        });
+
         function returnToMain() {
             // 서브 페이지 컨테이너 숨기기
             subPageContainer.classList.remove('active');
-            
+
             // 모든 서브 페이지 숨기기
             document.querySelectorAll('.sub-page').forEach(page => {
                 page.classList.remove('active');
             });
-            
+
             // 메인 컨테이너 표시
             scrollContainer.classList.remove('hidden');
+
+            // footer 보이기
+            footer.style.display = 'flex';
         }
 
         menuBtn.addEventListener('click', () => {
