@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LL - Lonely Legacy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <style>
         /* ==================== RESET & BASE STYLES ==================== */
         * {
@@ -26,9 +28,9 @@
 
         /* ==================== BACKGROUND IMAGE ==================== */
         /* 
-            [이미지 주석] 백그라운드 이미지 URL
-            여기에 Unsplash에서 선택한 베이지/화이트 톤의 추상적인 질감 이미지 URL을 넣어주세요.
-            현재는 플레이스홀더 이미지를 사용합니다.
+            [이미지 주석] 백그라운드 JPG 파일 경로
+            로컬 JPG 파일을 사용하려면 아래 url을 './background.jpg'와 같이 변경하세요.
+            현재는 web_source/shop_background.jpg 파일을 사용합니다.
         */
         .background-image {
             position: fixed;
@@ -36,11 +38,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80');
+            background-image: url('./web_source/shop_background.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.15;
+            opacity: 1.0;
             z-index: -1;
             pointer-events: none;
         }
@@ -163,6 +165,7 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: opacity 0.3s ease;
+            display: none;
         }
 
         .menu-close:hover {
@@ -275,15 +278,9 @@
             스크롤 시 순차적으로 변경됩니다.
             현재는 플레이스홀더 이미지를 사용합니다.
         */
-        .silver-object {
+        #modelCanvas {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .silver-object:hover {
-            transform: scale(1.05);
         }
 
         /* ==================== SECTION 2: SOUND & VISUAL ARCHIVE ==================== */
@@ -454,14 +451,11 @@
             <div class="section-title">01. THE CORE OBJECT</div>
             <div class="object-container">
                 <!-- 
-                    [이미지 주석] 실버 메탈 오브젝트 이미지
-                    아래 img 태그의 src에 실버/메탈 오브젝트 이미지 URL을 넣어주세요.
-                    현재는 플레이스홀더 이미지를 사용합니다.
+                    [3D 모델 주석] 실버 메탈 오브젝트 GLB 파일
+                    아래 canvas에 glb 파일을 로드합니다.
+                    JavaScript에서 './model.glb'와 같이 파일 경로를 지정하세요.
                 -->
-                <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80" 
-                     alt="Silver Object" 
-                     class="silver-object" 
-                     id="silverObject">
+                <canvas id="modelCanvas"></canvas>
             </div>
         </section>
 
@@ -551,61 +545,70 @@
             e.dataTransfer.effectAllowed = 'copy';
         });
 
-        // ==================== SILVER OBJECT SEQUENCE EFFECT ====================
-        const scrollContainer = document.getElementById('scrollContainer');
-        const silverObject = document.getElementById('silverObject');
+        // ==================== 3D MODEL LOADER ====================
+        const canvas = document.getElementById('modelCanvas');
+        const container = canvas.parentElement;
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
 
         // 
-        // [이미지 주석] 실버 메탈 오브젝트 시퀀스 이미지 URL 배열
-        // 여기에 Unsplash에서 선택한 실버/메탈 오브젝트 이미지 URL들을 배열로 넣어주세요.
-        // 스크롤 위치에 따라 순차적으로 변경됩니다.
-        // 현재는 플레이스홀더 이미지들을 사용합니다.
+        // [3D 모델 주석] GLB 파일 경로
+        // 여기에 glb 파일 경로를 지정하세요. 예: './model.glb'
+        // 현재는 플레이스홀더 큐브를 표시합니다.
         //
-        const objectImages = [
-            'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
-            'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&q=80',
-            'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80',
-            'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800&q=80',
-            'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&q=80'
-        ];
+        const glbPath = './model.glb';
 
-        let currentImageIndex = 0;
+        let model = null;
 
-        scrollContainer.addEventListener('scroll', () => {
-            const scrollTop = scrollContainer.scrollTop;
-            const sectionHeight = window.innerHeight;
-            const sectionIndex = Math.floor(scrollTop / sectionHeight);
+        // Load GLB model
+        const loader = new THREE.GLTFLoader();
+        loader.load(glbPath, (gltf) => {
+            model = gltf.scene;
+            model.scale.set(1, 1, 1);
+            scene.add(model);
+        }, undefined, (error) => {
+            console.error('Error loading GLB model:', error);
+            // Fallback: create a silver cube
+            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0xc0c0c0,
+                metalness: 0.9,
+                roughness: 0.2
+            });
+            model = new THREE.Mesh(geometry, material);
+            scene.add(model);
+        });
 
-            // Only change images when in section 1
-            if (sectionIndex === 0) {
-                const scrollProgress = scrollTop / sectionHeight;
-                const imageIndex = Math.floor(scrollProgress * objectImages.length);
-                
-                if (imageIndex !== currentImageIndex && imageIndex < objectImages.length) {
-                    currentImageIndex = imageIndex;
-                    silverObject.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        silverObject.src = objectImages[currentImageIndex];
-                        silverObject.style.opacity = '1';
-                    }, 150);
-                }
+        camera.position.z = 5;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            if (model) {
+                model.rotation.y += 0.005;
             }
-        });
+            renderer.render(scene, camera);
+        }
+        animate();
 
-        // ==================== HOVER EFFECT FOR SILVER OBJECT ====================
-        silverObject.addEventListener('mouseenter', () => {
-            silverObject.style.transform = 'scale(1.05)';
-        });
-
-        silverObject.addEventListener('mouseleave', () => {
-            silverObject.style.transform = 'scale(1)';
-        });
-
-        // ==================== PRELOAD IMAGES ====================
-        objectImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
+        // Handle resize
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
         });
     </script>
 </body>

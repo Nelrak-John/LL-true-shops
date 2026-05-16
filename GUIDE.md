@@ -12,7 +12,7 @@
 **위치**: CSS `.background-image` 클래스 (약 45번째 줄)
 ```css
 .background-image {
-    background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80');
+    background-image: url('web_source/shop_background.jpg');
     opacity: 0.15;
 }
 ```
