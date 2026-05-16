@@ -69,7 +69,7 @@
         /* 
             [이미지 주석] LL 엠블럼 메뉴 버튼 이미지
             src에 LL 브랜드 엠블럼 PNG 이미지 경로를 지정하세요.
-            크기는 32px~40px 내외로 설정하여 크롬하츠 스타일의 미니멀한 감도를 유지하세요.
+            크기는 50px~100px 내외로 설정 (미니멀 감도 유지)
         */
         .menu-btn {
             cursor: pointer;
@@ -79,8 +79,8 @@
         }
 
         .menu-btn img {
-            width: 40px;
-            height: 90px;
+            width: 50px;
+            height: 100px;
             display: block;
         }
 
@@ -143,96 +143,47 @@
             opacity: 0.6;
         }
 
-        /* ==================== MENU OVERLAY ==================== */
+        /* ==================== MINIMAL MENU TEXT ==================== */
         /* 
-            크롬하츠 스타일 사이드바 메뉴
-            width: 320px, position: fixed, 높은 z-index로 오버랩 방식 구현
-            메인 웹페이지는 고정되고 사이드바만 슬라이딩됨
+            크롬하츠 스타일 미니멀 메뉴 텍스트
+            버튼 직하단에 텍스트만 투명하게 노출
+            박스 배경 없이 베이지 배경 위에 텍스트만 표시
         */
-        .menu-overlay {
+        .menu-text-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 320px;
-            height: 100%;
-            background: rgba(242, 239, 233, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 5000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 50px;
-            transform: translateX(-100%);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 2px 0 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .menu-overlay.active {
-            transform: translateX(0);
-        }
-
-        .menu-close {
-            position: absolute;
-            top: 30px;
+            top: 180px;
             left: 50px;
-            font-size: 14px;
-            letter-spacing: 2px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: opacity 0.3s ease;
-            display: none;
-        }
-
-        .menu-close:hover {
-            opacity: 0.6;
-        }
-
-        .menu-items {
+            z-index: 9998;
             display: flex;
             flex-direction: column;
-            gap: 40px;
-            text-align: left;
-        }
-
-        .menu-item {
-            font-size: 20px;
-            letter-spacing: 3px;
-            text-decoration: none;
-            color: #1a1a1a;
-            text-transform: uppercase;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .menu-item:hover {
-            opacity: 0.6;
-            transform: translateX(10px);
-        }
-
-        /* ==================== DIMMED LAYER ==================== */
-        /* 
-            메뉴 열릴 때 우측 메인 화면에 깔리는 연한 블랙 반투명 레이어
-            rgba(0, 0, 0, 0.1) 투명도로 설정
-            클릭 시 메뉴 닫힘 기능 포함
-        */
-        .dimmed-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: 4000;
+            gap: 25px;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease;
             pointer-events: none;
         }
 
-        .dimmed-layer.active {
+        .menu-text-container.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
+        }
+
+        .menu-text-item {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s ease, letter-spacing 0.3s ease;
+        }
+
+        .menu-text-item:hover {
+            opacity: 0.6;
+            letter-spacing: 6px;
         }
 
         /* ==================== MAIN CONTENT SHIFT ==================== */
@@ -244,12 +195,43 @@
         /* 메인 콘텐츠 이동 코드 제거 - 오버랩 방식으로 변경 */
 
         /* ==================== SCROLL SNAP CONTAINER ==================== */
+        /* 
+            메인 페이지 고정 뷰 (크롬하츠 스타일)
+            스크롤 없이 완전한 고정 뷰 유지
+        */
         .scroll-container {
             width: 100%;
             height: 100vh;
-            overflow-y: scroll;
+            overflow: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ==================== SUB PAGE CONTAINER ==================== */
+        .sub-page-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .sub-page-container.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
         }
 
         .section {
@@ -297,50 +279,164 @@
             height: 100%;
         }
 
-        /* ==================== SECTION 2: SOUND & VISUAL ARCHIVE ==================== */
-        .section-2 {
+        /* ==================== SUB PAGE STYLES ==================== */
+        .sub-page {
+            min-height: 100vh;
+            padding: 150px 50px 50px;
+            display: none;
+        }
+
+        .sub-page.active {
+            display: block;
+        }
+
+        .sub-page-title {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+            color: #1a1a1a;
+        }
+
+        .sub-page-content {
+            max-width: 800px;
+            line-height: 2;
+            color: #1a1a1a;
+            opacity: 0.8;
+        }
+
+        .sub-page-content p {
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* ==================== SHOP PRODUCT GRID ==================== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .product-card {
             background: rgba(245, 240, 232, 0.3);
+            padding: 20px;
+            transition: opacity 0.3s ease;
         }
 
-        .archive-content {
-            text-align: center;
-            max-width: 600px;
+        .product-card:hover {
+            opacity: 0.8;
         }
 
-        .archive-title {
-            font-size: 32px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
+        .product-image {
+            width: 100%;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
         }
 
-        .archive-description {
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-name {
+            font-family: 'Times New Roman', Georgia, serif;
             font-size: 16px;
-            line-height: 1.8;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .product-price {
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #1a1a1a;
             opacity: 0.7;
         }
 
-        /* ==================== SECTION 3: PRODUCT LAB ==================== */
-        .section-3 {
+        .upload-section {
+            margin-top: 80px;
+            padding: 40px;
             background: rgba(245, 240, 232, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        .lab-content {
-            text-align: center;
-            max-width: 600px;
-        }
-
-        .lab-title {
-            font-size: 32px;
+        .upload-title {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 24px;
+            font-weight: bold;
             letter-spacing: 4px;
             text-transform: uppercase;
             margin-bottom: 30px;
+            color: #1a1a1a;
         }
 
-        .lab-description {
-            font-size: 16px;
-            line-height: 1.8;
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #1a1a1a;
             opacity: 0.7;
+        }
+
+        .form-input {
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.5);
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 14px;
+            color: #1a1a1a;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #1a1a1a;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .upload-button {
+            padding: 15px 30px;
+            background: #1a1a1a;
+            color: #F5F0E8;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .upload-button:hover {
+            opacity: 0.8;
         }
 
         /* ==================== FOOTER ==================== */
@@ -369,10 +465,10 @@
             opacity: 0.6;
         }
 
-        .instagram-link svg {
+        .instagram-link img {
             width: 100%;
             height: 100%;
-            fill: #1a1a1a;
+            object-fit: contain;
         }
 
         /* ==================== RESPONSIVE ==================== */
@@ -452,24 +548,18 @@
         </div>
     </header>
 
-    <!-- Dimmed Layer -->
-    <div class="dimmed-layer" id="dimmedLayer"></div>
-
-    <!-- Menu Overlay -->
-    <div class="menu-overlay" id="menuOverlay">
-        <div class="menu-close" id="menuClose">CLOSE -</div>
-        <div class="menu-items">
-            <a href="#" class="menu-item">ARCHIVE</a>
-            <a href="#" class="menu-item">EDITORIAL</a>
-            <a href="#" class="menu-item">SHOP</a>
-        </div>
+    <!-- Minimal Menu Text Container -->
+    <div class="menu-text-container" id="menuTextContainer">
+        <div class="menu-text-item" data-page="shop">SHOP</div>
+        <div class="menu-text-item" data-page="archive">ARCHIVE</div>
+        <div class="menu-text-item" data-page="editorial">EDITORIAL</div>
     </div>
 
-    <!-- Scroll Container -->
+    <!-- Scroll Container (Main Page) -->
     <div class="scroll-container" id="scrollContainer">
         <!-- Section 1: THE CORE OBJECT -->
         <section class="section section-1">
-            <div class="section-title">01. THE CORE OBJECT</div>
+            <div class="section-title"></div>
             <div class="object-container">
                 <!-- 
                     [3D 모델 주석] 실버 메탈 오브젝트 GLB 파일
@@ -479,82 +569,184 @@
                 <canvas id="modelCanvas"></canvas>
             </div>
         </section>
+    </div>
 
-        <!-- Section 2: SOUND & VISUAL ARCHIVE -->
-        <section class="section section-2">
-            <div class="section-title">02. SOUND & VISUAL ARCHIVE</div>
-            <div class="archive-content">
-                <h2 class="archive-title">Archive</h2>
-                <p class="archive-description">
-                    Curated collection of soundscapes and visual narratives from artists worldwide.
-                    Explore the intersection of music, fashion, and artistic expression.
-                </p>
+    <!-- Sub Page Container -->
+    <div class="sub-page-container" id="subPageContainer">
+        <!-- Archive Page -->
+        <div class="sub-page" id="archivePage">
+            <h1 class="sub-page-title">ARCHIVE</h1>
+            <div class="sub-page-content">
+                <p>Curated collection of soundscapes and visual narratives from artists worldwide.</p>
+                <p>Explore the intersection of music, fashion, and artistic expression.</p>
+                <p>Our archive represents a journey through time, capturing moments of creative brilliance and cultural significance.</p>
             </div>
-        </section>
+        </div>
 
-        <!-- Section 3: PRODUCT LAB -->
-        <section class="section section-3">
-            <div class="section-title">03. PRODUCT LAB</div>
-            <div class="lab-content">
-                <h2 class="lab-title">Product Lab</h2>
-                <p class="lab-description">
-                    Experimental fashion pieces and collaborative projects.
-                    Where craftsmanship meets contemporary art.
-                </p>
+        <!-- Editorial Page -->
+        <div class="sub-page" id="editorialPage">
+            <h1 class="sub-page-title">EDITORIAL</h1>
+            <div class="sub-page-content">
+                <p>Visual storytelling through fashion photography and artistic direction.</p>
+                <p>Each editorial piece is a carefully crafted narrative that transcends traditional boundaries.</p>
+                <p>We collaborate with visionary photographers and stylists to create timeless visual experiences.</p>
             </div>
-        </section>
+        </div>
+
+        <!-- Shop Page -->
+        <div class="sub-page" id="shopPage">
+            <h1 class="sub-page-title">SHOP</h1>
+            <div class="sub-page-content">
+                <p>Exclusive collections and limited edition pieces.</p>
+                <p>Each item is crafted with meticulous attention to detail and quality.</p>
+                <p>Discover our latest arrivals and timeless classics that define the LL aesthetic.</p>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <!-- 
+                            [이미지 주석] 제품 이미지
+                            여기에 제품 이미지 URL을 넣어주세요.
+                            현재는 플레이스홀더입니다.
+                        -->
+                        <span style="color: rgba(0,0,0,0.3); font-size: 14px; letter-spacing: 2px;">PRODUCT IMAGE</span>
+                    </div>
+                    <div class="product-name">SILVER CHAIN NECKLACE</div>
+                    <div class="product-price">₩ 1,348,000</div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <span style="color: rgba(0,0,0,0.3); font-size: 14px; letter-spacing: 2px;">PRODUCT IMAGE</span>
+                    </div>
+                    <div class="product-name">LL Short Sleeve</div>
+                    <div class="product-price">₩ 88,000</div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <span style="color: rgba(0,0,0,0.3); font-size: 14px; letter-spacing: 2px;">PRODUCT IMAGE</span>
+                    </div>
+                    <div class="product-name">"L0V3 L0V3" RING</div>
+                    <div class="product-price">₩ 348,000</div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2 class="upload-title">UPLOAD PRODUCT</h2>
+                <form class="upload-form">
+                    <div class="form-group">
+                        <label class="form-label">PRODUCT NAME</label>
+                        <input type="text" class="form-input" placeholder="Enter product name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">PRICE</label>
+                        <input type="text" class="form-input" placeholder="Enter price (e.g., $450.00)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">DESCRIPTION</label>
+                        <textarea class="form-input form-textarea" placeholder="Enter product description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IMAGE URL</label>
+                        <input type="text" class="form-input" placeholder="Enter image URL">
+                    </div>
+                    <button type="submit" class="upload-button">UPLOAD</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
     <footer>
+        <!-- 
+            [이미지 주석] 인스타그램 아이콘 이미지
+            src에 인스타그램 아이콘 PNG 이미지 경로를 지정하세요.
+            현재는 assets/insta_icon.png 경로로 설정되어 있습니다.
+        -->
         <a href="https://www.instagram.com/lonelylegacyxx/" target="_blank" class="instagram-link">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
+            <img src="assets/insta_icon.png" alt="Instagram">
         </a>
     </footer>
 
     <script>
-        // ==================== MENU OVERLAY FUNCTIONALITY ====================
+        // ==================== MINIMAL MENU FUNCTIONALITY ====================
         /* 
-            크롬하츠 스타일 메뉴 인터랙션
-            - LL 엠블럼 버튼 클릭 시 사이드바 슬라이딩 오버랩
+            크롬하츠 스타일 미니멀 메뉴 인터랙션
+            - LL 엠블럼 버튼 클릭 시 텍스트 메뉴 페이드인
             - 메인 웹페이지는 고정 (우측 이동 없음)
-            - 딤드 레이어 클릭 시 메뉴 닫힘
+            - 메뉴 텍스트 클릭 시 해당 서브 페이지로 전환
             - LL 엠블럼 버튼은 항상 최상단에 고정 (z-index: 9999)
         */
         const menuBtn = document.getElementById('menuBtn');
-        const menuOverlay = document.getElementById('menuOverlay');
-        const menuClose = document.getElementById('menuClose');
-        const dimmedLayer = document.getElementById('dimmedLayer');
+        const menuTextContainer = document.getElementById('menuTextContainer');
+        const scrollContainer = document.getElementById('scrollContainer');
+        const subPageContainer = document.getElementById('subPageContainer');
+        const menuTextItems = document.querySelectorAll('.menu-text-item');
 
-        function openMenu() {
-            menuOverlay.classList.add('active');
-            dimmedLayer.classList.add('active');
-            // 메인 콘텐츠 이동 제거 - 오버랩 방식
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuTextContainer.classList.add('active');
+            } else {
+                menuTextContainer.classList.remove('active');
+            }
         }
 
-        function closeMenu() {
-            menuOverlay.classList.remove('active');
-            dimmedLayer.classList.remove('active');
+        function switchToPage(pageName) {
+            // 메인 컨테이너 숨기기
+            scrollContainer.classList.add('hidden');
+            
+            // 모든 서브 페이지 숨기기
+            document.querySelectorAll('.sub-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 선택한 서브 페이지 표시
+            const targetPage = document.getElementById(pageName + 'Page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+                subPageContainer.classList.add('active');
+            }
+            
+            // 메뉴 닫기
+            isMenuOpen = false;
+            menuTextContainer.classList.remove('active');
+        }
+
+        function returnToMain() {
+            // 서브 페이지 컨테이너 숨기기
+            subPageContainer.classList.remove('active');
+            
+            // 모든 서브 페이지 숨기기
+            document.querySelectorAll('.sub-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 메인 컨테이너 표시
+            scrollContainer.classList.remove('hidden');
         }
 
         menuBtn.addEventListener('click', () => {
-            if (menuOverlay.classList.contains('active')) {
-                closeMenu();
+            // 서브 페이지가 열려있으면 메인으로 돌아감
+            if (subPageContainer.classList.contains('active')) {
+                returnToMain();
             } else {
-                openMenu();
+                toggleMenu();
             }
         });
 
-        menuClose.addEventListener('click', closeMenu);
-
-        // Close menu when clicking on dimmed layer
-        dimmedLayer.addEventListener('click', closeMenu);
-
-        // Close menu when clicking on menu items
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', closeMenu);
+        // 메뉴 아이템 클릭 시 페이지 전환
+        menuTextItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const pageName = item.getAttribute('data-page');
+                switchToPage(pageName);
+            });
         });
 
         // ==================== LOGO DRAG AND DROP FUNCTIONALITY ====================

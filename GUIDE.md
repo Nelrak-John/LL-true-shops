@@ -6,7 +6,7 @@
 - `index.html`: 메인 웹페이지 파일
 - 모든 HTML, CSS, JavaScript가 단일 파일에 통합되어 있습니다.
 
-## 크롬하츠 스타일 메뉴 시스템
+## 크롬하츠 스타일 미니멀 메뉴 시스템
 
 ### 메뉴 버튼 (LL 엠블럼)
 **위치**: HTML `<div class="header-left">` 내부 (약 426번째 줄)
@@ -17,65 +17,142 @@
 ```
 - LL 브랜드 엠블럼 PNG 이미지를 사용합니다.
 - 이미지 경로: `assets/ll-emblem.png`
-- 크기: 36px x 36px (32px~40px 내외 권장)
+- 크기: 50px x 100px (50px~100px 내외 권장)
 - z-index: 9999로 설정되어 항상 최상단에 표시됩니다.
 - 호버 시 투명도 0.6, 확대 1.05배 효과가 적용됩니다.
 
-### 사이드바 메뉴 레이어
-**위치**: CSS `.menu-overlay` 클래스 (약 152번째 줄)
+### 미니멀 메뉴 텍스트 컨테이너
+**위치**: CSS `.menu-text-container` 클래스 (약 152번째 줄)
 ```css
-.menu-overlay {
+.menu-text-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 320px;
-    height: 100%;
-    background: rgba(242, 239, 233, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 5000;
-    transform: translateX(-100%);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    top: 280px;
+    left: 50px;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 ```
-- **오버랩 방식**: 메인 웹페이지는 고정되고 사이드바만 슬라이딩됩니다.
-- **너비**: 320px (크롬하츠 스타일)
-- **z-index**: 5000 (딤드 레이어 위에 표시)
-- **배경**: 반투명 베이지 톤 (rgba(242, 239, 233, 0.95))
-- **애니메이션**: 좌측에서 슬라이딩 (0.6초)
+- **박스 배경 없음**: 베이지 배경 위에 텍스트만 투명하게 노출
+- **위치**: 버튼 직하단 (top: 280px, left: 50px) - 엠블럼과 간격 2배
+- **z-index**: 9998 (메뉴 버튼 바로 아래)
+- **애니메이션**: 페이드인/페이드아웃 (0.4초)
+- **메뉴 순서**: SHOP → ARCHIVE → EDITORIAL
 
-### 딤드 레이어
-**위치**: CSS `.dimmed-layer` 클래스 (약 218번째 줄)
+### 메뉴 텍스트 아이템
+**위치**: CSS `.menu-text-item` 클래스 (약 172번째 줄)
 ```css
-.dimmed-layer {
+.menu-text-item {
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    cursor: pointer;
+    transition: opacity 0.3s ease, letter-spacing 0.3s ease;
+}
+```
+- **폰트**: 세리프 (Times New Roman)
+- **스타일**: 대문자, 굵은 글씨
+- **자간**: 4px (호버 시 6px로 확장)
+- **호버 효과**: 투명도 0.6, 자간 확장
+
+### 메뉴 토글 기능
+**위치**: JavaScript (약 485번째 줄)
+```javascript
+function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+    if (isMenuOpen) {
+        menuTextContainer.classList.add('active');
+    } else {
+        menuTextContainer.classList.remove('active');
+    }
+}
+```
+- LL 엠블럼 버튼 클릭 시 메뉴 텍스트 페이드인/페이드아웃
+- 서브 페이지가 열려있으면 메인으로 돌아감
+- 메뉴 텍스트 클릭 시 해당 서브 페이지로 전환
+
+### 섹션 스위칭 기능
+**위치**: JavaScript (약 511번째 줄)
+```javascript
+function switchToPage(pageName) {
+    scrollContainer.classList.add('hidden');
+    document.querySelectorAll('.sub-page').forEach(page => {
+        page.classList.remove('active');
+    });
+    const targetPage = document.getElementById(pageName + 'Page');
+    if (targetPage) {
+        targetPage.classList.add('active');
+        subPageContainer.classList.add('active');
+    }
+}
+```
+- 메인 비주얼 페이드아웃, 서브 페이지 페이드인
+- 페이지 전환 시 메뉴 자동 닫힘
+- 서브 페이지에서 스크롤 가능
+
+### 메인 페이지 고정 뷰
+**위치**: CSS `.scroll-container` 클래스 (약 202번째 줄)
+```css
+.scroll-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+```
+- **스크롤 잠금**: 메인 홈 화면은 스크롤 없이 완전한 고정 뷰
+- **높이**: 100vh
+- **오버플로우**: hidden
+
+### 서브 페이지 스크롤 허용
+**위치**: CSS `.sub-page-container` 클래스 (약 212번째 줄)
+```css
+.sub-page-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1);
-    z-index: 4000;
+    height: 100vh;
+    overflow-y: auto;
 }
 ```
-- 메뉴 열릴 때 우측 메인 화면에 연한 블랙 반투명 레이어가 깔립니다.
-- 투명도: rgba(0, 0, 0, 0.1)
-- 클릭 시 메뉴가 닫힙니다.
+- **스크롤 허용**: 서브 페이지에서만 스크롤 가능
+- **오버플로우**: overflow-y: auto
+- **전환**: 페이드인/페이드아웃 (0.5초)
 
-### 메뉴 토글 기능
-**위치**: JavaScript (약 517번째 줄)
-```javascript
-function openMenu() {
-    menuOverlay.classList.add('active');
-    dimmedLayer.classList.add('active');
-}
-
-function closeMenu() {
-    menuOverlay.classList.remove('active');
-    dimmedLayer.classList.remove('active');
+### Shop 페이지 제품 그리드
+**위치**: CSS `.product-grid` 클래스 (약 316번째 줄)
+```css
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
 }
 ```
-- LL 엠블럼 버튼 클릭 시 메뉴 열림/닫힘 토글
-- 딤드 레이어 클릭 시 메뉴 닫힘
-- 메뉴 항목 클릭 시 메뉴 닫힘
+- **레이아웃**: 그리드 형태 (반응형)
+- **최소 너비**: 300px
+- **간격**: 40px
+
+### Shop 페이지 업로드 폼
+**위치**: CSS `.upload-section` 클래스 (약 367번째 줄)
+```css
+.upload-section {
+    margin-top: 80px;
+    padding: 40px;
+    background: rgba(245, 240, 232, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+```
+- **위치**: 제품 그리드 하단
+- **배경**: 반투명 베이지
+- **기능**: 제품 이름, 가격, 설명, 이미지 URL 입력 폼
 
 ## 이미지 수정 방법
 
