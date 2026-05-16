@@ -6,6 +6,77 @@
 - `index.html`: 메인 웹페이지 파일
 - 모든 HTML, CSS, JavaScript가 단일 파일에 통합되어 있습니다.
 
+## 크롬하츠 스타일 메뉴 시스템
+
+### 메뉴 버튼 (LL 엠블럼)
+**위치**: HTML `<div class="header-left">` 내부 (약 426번째 줄)
+```html
+<div class="menu-btn" id="menuBtn">
+    <img src="assets/ll-emblem.png" alt="LL Menu">
+</div>
+```
+- LL 브랜드 엠블럼 PNG 이미지를 사용합니다.
+- 이미지 경로: `assets/ll-emblem.png`
+- 크기: 36px x 36px (32px~40px 내외 권장)
+- z-index: 9999로 설정되어 항상 최상단에 표시됩니다.
+- 호버 시 투명도 0.6, 확대 1.05배 효과가 적용됩니다.
+
+### 사이드바 메뉴 레이어
+**위치**: CSS `.menu-overlay` 클래스 (약 152번째 줄)
+```css
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100%;
+    background: rgba(242, 239, 233, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 5000;
+    transform: translateX(-100%);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+```
+- **오버랩 방식**: 메인 웹페이지는 고정되고 사이드바만 슬라이딩됩니다.
+- **너비**: 320px (크롬하츠 스타일)
+- **z-index**: 5000 (딤드 레이어 위에 표시)
+- **배경**: 반투명 베이지 톤 (rgba(242, 239, 233, 0.95))
+- **애니메이션**: 좌측에서 슬라이딩 (0.6초)
+
+### 딤드 레이어
+**위치**: CSS `.dimmed-layer` 클래스 (약 218번째 줄)
+```css
+.dimmed-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 4000;
+}
+```
+- 메뉴 열릴 때 우측 메인 화면에 연한 블랙 반투명 레이어가 깔립니다.
+- 투명도: rgba(0, 0, 0, 0.1)
+- 클릭 시 메뉴가 닫힙니다.
+
+### 메뉴 토글 기능
+**위치**: JavaScript (약 517번째 줄)
+```javascript
+function openMenu() {
+    menuOverlay.classList.add('active');
+    dimmedLayer.classList.add('active');
+}
+
+function closeMenu() {
+    menuOverlay.classList.remove('active');
+    dimmedLayer.classList.remove('active');
+}
+```
+- LL 엠블럼 버튼 클릭 시 메뉴 열림/닫힘 토글
+- 딤드 레이어 클릭 시 메뉴 닫힘
+- 메뉴 항목 클릭 시 메뉴 닫힘
+
 ## 이미지 수정 방법
 
 ### 1. 백그라운드 이미지
